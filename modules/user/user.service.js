@@ -1,5 +1,5 @@
 const {v4: uuidv4} = require('uuid');
-const {createProfileRepo, getAllProfileRepo} = require("./user.repo");
+const {createProfileRepo, getAllProfileRepo, getProfileRepo} = require("./user.repo");
 
 
 exports.createProfileService = async (requestBody) => {
@@ -11,4 +11,8 @@ exports.getAllProfileService = async (page, limit) => {
     const pageNo = Math.max(0, page)
     const pageLimit = limit || 10
     return getAllProfileRepo(pageNo, pageLimit)
+};
+
+exports.getProfileService = async (userId) => {
+    return getProfileRepo(userId)
 };

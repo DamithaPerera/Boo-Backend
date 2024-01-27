@@ -1,4 +1,4 @@
-const {createProfileService, getAllProfileService} = require("./user.service");
+const {createProfileService, getAllProfileService, getProfileService} = require("./user.service");
 
 let msg = {}
 
@@ -20,6 +20,20 @@ exports.getAllProfiles = async (req, res, next) => {
     try {
         const {page, limit} = req.query
         const response = await getAllProfileService(page, limit)
+        msg.message = "success"
+        msg.data = response
+        res.status(201).json(msg);
+    } catch (error) {
+        msg.message = "fail"
+        msg.data = error.message
+        res.status(400).json(msg);
+    }
+};
+
+exports.getProfile = async (req, res, next) => {
+    try {
+        const {id} = req.params
+        const response = await getProfileService(id)
         msg.message = "success"
         msg.data = response
         res.status(201).json(msg);
