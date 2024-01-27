@@ -9,6 +9,6 @@ exports.createCommentService = async (requestBody) => {
 
 exports.getAllCommentsService = async (page, limit, profileId) => {
     const pageNo = Math.max(0, page)
-    const pageLimit = limit || 10
+    const pageLimit = parseInt(limit, 10)
     return getAllCommentsRepo(pageNo, pageLimit, profileId)
 };
