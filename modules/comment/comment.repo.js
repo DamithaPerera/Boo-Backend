@@ -43,3 +43,9 @@ exports.getAllCommentsRepo = async (pageNo, pageLimit, profileId) => {
         }
     ])
 };
+
+exports.updateCommentRepo = async (commentId, commentMessage) => {
+    return comment.findOneAndUpdate({
+        id: commentId
+    }, {description: commentMessage})
+};
