@@ -1,8 +1,8 @@
 const express = require('express');
-const {createComment} = require("./comment.controller");
+const {createComment, getAllComments} = require("./comment.controller");
 const router = express.Router();
 
-// router.get('/all', getAllProfiles);
+router.get('/:profileId', getAllComments);
 // router.get('/:id', getProfile);
 router.post('/create', createComment);
 
