@@ -1,4 +1,5 @@
 const comment = require("../../models/comment");
+const like = require("../../models/like");
 
 
 exports.createCommentRepo = async (requestBody) => {
@@ -27,13 +28,12 @@ exports.getAllCommentsRepo = async (pageNo, pageLimit, profileId) => {
         {$limit: pageLimit},
         {
             $project: {
-                _id: 1,
                 id: 1,
-                commentedUserId: 1,
                 profileIdForComment: 1,
                 description: 1,
                 created_at: 1,
                 updated_at: 1,
+                likeCount: 1,
                 userDetailProfile: {
                     name: "$commentedUserDetails.name",
                     image: "$commentedUserDetails.image",
@@ -48,4 +48,38 @@ exports.updateCommentRepo = async (commentId, commentMessage) => {
     return comment.findOneAndUpdate({
         id: commentId
     }, {description: commentMessage})
+};
+
+exports.checkLikeRepo = async (responseBody) => {
+    const results = await like.aggregate([
+        {$match: {commentId: responseBody.commentId, userId: responseBody.userId}},
+        {
+            $project: {
+                statusChanged: {$ne: ['$status', responseBody.status]}
+            }
+        }
+    ]);
+
+    const statusChanged = results.length > 0 && results[0].statusChanged;
+
+    if (statusChanged) {
+        // Update or create the like document
+        await like.findOneAndUpdate({
+            commentId: responseBody.commentId,
+            userId: responseBody.userId
+        }, {
+            $set: {status: responseBody.status}
+        }, {
+            new: true,
+            upsert: true
+        });
+
+        // Update like count in the comment
+        const likeIncrement = responseBody.status ? 1 : -1;
+        await comment.updateOne({
+            id: responseBody.commentId
+        }, {
+            $inc: {likeCount: likeIncrement}
+        });
+    }
 };

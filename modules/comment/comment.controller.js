@@ -1,4 +1,4 @@
-const {createCommentService, getAllCommentsService, updateCommentService} = require("./comment.service");
+const {createCommentService, getAllCommentsService, updateCommentService, likeCommentService} = require("./comment.service");
 
 
 let msg = {}
@@ -37,6 +37,20 @@ exports.updateComment = async (req, res, next) => {
         const {commentId} = req.params
         const {comment} = req.body
         const response = await updateCommentService(commentId, comment)
+        msg.message = "success"
+        msg.data = response
+        res.status(201).json(msg);
+    } catch (error) {
+        msg.message = "fail"
+        msg.data = error.message
+        res.status(400).json(msg);
+    }
+};
+
+exports.likeComment = async (req, res, next) => {
+    try {
+        const responseBody = req.body
+        const response = await likeCommentService(responseBody)
         msg.message = "success"
         msg.data = response
         res.status(201).json(msg);

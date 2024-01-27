@@ -1,5 +1,5 @@
 const {v4: uuidv4} = require("uuid");
-const {createCommentRepo, getAllCommentsRepo, updateCommentRepo} = require("./comment.repo");
+const {createCommentRepo, getAllCommentsRepo, updateCommentRepo, likeCommentRepo, checkLikeRepo} = require("./comment.repo");
 
 
 exports.createCommentService = async (requestBody) => {
@@ -15,4 +15,8 @@ exports.getAllCommentsService = async (page, limit, profileId) => {
 
 exports.updateCommentService = async (commentId, comment) => {
     return updateCommentRepo(commentId, comment)
+};
+
+exports.likeCommentService = async (responseBody) => {
+    return checkLikeRepo(responseBody)
 };
