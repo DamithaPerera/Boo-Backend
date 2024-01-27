@@ -4,6 +4,7 @@ const connectDB = require('./database/db');
 const cors = require('cors');
 
 const profile = require('./modules/user/user.router');
+const comment = require('./modules/comment/comment.router');
 // Creating express object
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(express.json());
 
 
 app.use('/v1/profile', profile);
+app.use('/v1/comment', comment);
 
 
 // Server Setup
